@@ -81,6 +81,13 @@ void DrawPieces(SDL_Renderer* renderer, Board* b){
 	}
 }
 
+int ScreenPosToSquare(int x, int y){
+	int rank = ((float)y / (float)HEIGHT) * 8;
+	int file = ((float)x / (float)WIDTH) * 8;
+
+	return rank*8 + file;
+}
+
 void DestroyTextures(){
 	for (int i=0; i<6; i++){
 		SDL_DestroyTexture(PieceTextures[white][i]);
@@ -106,7 +113,15 @@ int main(int argc, char* argv[]){
 	Board board;
 	ParseFEN(&board, StartFEN);
 	GenerateBitboards(&board);
+
 	
+	// Loop Variables
+	int mouse_start_x, mouse_start_y;
+	int mouse_end_x, mouse_end_y;
+	int mouse_held = 0;
+
+	int start = -1;
+	int end = -1;
 
 	int running = 1;
 	SDL_Event e;
@@ -117,6 +132,29 @@ int main(int argc, char* argv[]){
 			}
 		}
 
+		if (SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1)){
+			if (mouse_held == 0) SDL_GetMouseState(&mouse_start_x, &mouse_start_y);
+			mouse_held = 1;
+		}
+		else {
+			if (mouse_held){
+				mouse_held = 0;
+
+				SDL_GetMouseState(&mouse_end_x, &mouse_end_y);
+				start = ScreenPosToSquare(mouse_start_x, mouse_start_y);
+				end = ScreenPosToSquare(mouse_end_x, mouse_end_y);
+
+				printf("%d %d\n", start, end);
+			}
+		}
+
+		if (start != -1 && end != -1){
+			board.pieces[end] = board.pieces[start];
+			board.pieces[start] = -1;
+			
+			start = -1;
+			end = -1;
+		}
 		DrawBoard(Renderer);
 		DrawPieces(Renderer, &board);
 		SDL_RenderPresent(Renderer);
