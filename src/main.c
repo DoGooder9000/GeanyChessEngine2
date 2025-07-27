@@ -105,7 +105,8 @@ int main(int argc, char* argv[]){
 	// Init board
 	Board board;
 	ParseFEN(&board, StartFEN);
-
+	GenerateBitboards(&board);
+	
 
 	int running = 1;
 	SDL_Event e;

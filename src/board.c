@@ -161,6 +161,18 @@ void ParseFEN(Board* b, char* FEN){
 	}
 }
 
+void GenerateBitboards(Board* b){
+	for (int i=0; i<14; i++) b->bitboards[i/7][i%7] = 0ULL;
+
+	for (int i=0; i<64; i++){
+		// Also need to update the same color bitboard [6]
+		if (b->pieces[i] != '_'){
+			b->bitboards[PieceColor(b->pieces[i])][PieceType(b->pieces[i])] |= (1ULL << i);
+			b->bitboards[PieceColor(b->pieces[i])][6] |= (1ULL << i);
+		}
+	}
+}
+
 int GetIntPos(char* s){
 		int pos;
 		switch (s[0]){

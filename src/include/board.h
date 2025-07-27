@@ -44,4 +44,6 @@ typedef struct Board{
 
 void ParseFEN(Board* b, char* FEN);
 
+void GenerateBitboards(Board* b);
+
 int GetIntPos(char* s);
