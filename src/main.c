@@ -95,6 +95,12 @@ void DestroyTextures(){
 	}
 }
 
+void PrecomputeMoves(){
+	PrecomputePawnTables(PrecomputedPawnAttacks, PrecomputedPawnMoves);
+	PrecomputeKnightTables(PrecomputedKnightMoves);
+	PrecomputeKingTables(PrecomputedKingMoves);
+}
+
 int main(int argc, char* argv[]){
 	InitSDL(); // Init SDL
 
