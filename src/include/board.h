@@ -1,5 +1,10 @@
 #pragma once
 
+#include "bitboard.h"
+#include "piece.h"
+
+extern char* StartFEN;
+
 enum{
 	white,
 	black
@@ -24,13 +29,19 @@ enum{
 };
 
 enum{
-	Pawn, Knight, Bishop, Rook, Queen, King
+	pawn, knight, bishop, rook, queen, king
 };
 
 typedef struct Board{
+	int pieces[64];
+	U64 bitboards[2][6];
 	int color;
 	int castle_rights;
 	int en_sq;
 	int half_moves;
 	int full_moves;
 } Board;
+
+void ParseFEN(Board* b, char* FEN);
+
+int GetIntPos(char* s);

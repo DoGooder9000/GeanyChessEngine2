@@ -3,9 +3,26 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "include/board.h"
+#include "include/bitboard.h"
+#include "include/piece.h"
+
 #define WIDTH 800
 #define HEIGHT 800
 #define TITLE "Geany Chess Engine 2"
+
+const int PIECE_WIDTH = WIDTH / 8;
+const int PIECE_HEIGHT = HEIGHT / 8;
+
+int WhiteSquareColor[4] = {240, 224, 161, 255};
+int BlackSquareColor[4] = {115, 101, 70, 255};
+
+SDL_Texture* PieceTextures[2][6];
+
+const char* PieceTexturePaths[2][6] = {
+									{"src/img/whitepawn.png", "src/img/whiteknight.png", "src/img/whitebishop.png", "src/img/whiterook.png", "src/img/whitequeen.png", "src/img/whiteking.png"},
+									{"src/img/blackpawn.png", "src/img/blackknight.png", "src/img/blackbishop.png", "src/img/blackrook.png", "src/img/blackqueen.png", "src/img/blackking.png"}
+									};
 
 void InitSDL(){
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0){
@@ -23,12 +40,71 @@ void QuitSDL(){
 	IMG_Quit();
 }
 
+void DrawBoard(SDL_Renderer* renderer){
+	SDL_Rect rect;
+	rect.w = WIDTH / 8;
+	rect.h = HEIGHT / 8;
+
+	for (int i=0; i<8; i++){
+		rect.y = rect.h * i;
+		for (int j=0; j<8; j++){
+			rect.x = rect.w * j;
+
+			if ((i+j) % 2){ // Black
+				SDL_SetRenderDrawColor(renderer, BlackSquareColor[0], BlackSquareColor[1], BlackSquareColor[2], 255);
+			}
+			else{
+				SDL_SetRenderDrawColor(renderer, WhiteSquareColor[0], WhiteSquareColor[1], WhiteSquareColor[2], 255);
+			}
+
+			SDL_RenderFillRect(renderer, &rect);
+		}
+	}
+}
+
+void DrawPieces(SDL_Renderer* renderer, Board* b){
+	SDL_Rect rect;
+	rect.w = PIECE_WIDTH;
+	rect.h = PIECE_HEIGHT;
+
+	char p;
+
+	for (int i=0; i<8; i++){
+		for (int j=0; j<8; j++){
+			p = b->pieces[i*8+j];
+			if (p != '_'){
+				rect.x = PIECE_WIDTH*j;
+				rect.y = PIECE_HEIGHT*i;
+				SDL_RenderCopy(renderer, PieceTextures[PieceColor(p)][PieceType(p)], NULL, &rect);
+			}
+		}
+	}
+}
+
+void DestroyTextures(){
+	for (int i=0; i<6; i++){
+		SDL_DestroyTexture(PieceTextures[white][i]);
+		SDL_DestroyTexture(PieceTextures[black][i]);
+	}
+}
+
 int main(int argc, char* argv[]){
 	InitSDL(); // Init SDL
 
 	// Make window and renderer
 	SDL_Window* Window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, 0);
 	SDL_Renderer* Renderer = SDL_CreateRenderer(Window, -1, 0);
+
+	// Load Textures
+	for (int i=0; i<6; i++){
+		PieceTextures[white][i] = IMG_LoadTexture(Renderer, PieceTexturePaths[white][i]);
+		PieceTextures[black][i] = IMG_LoadTexture(Renderer, PieceTexturePaths[black][i]);
+	}
+
+	
+	// Init board
+	Board board;
+	ParseFEN(&board, StartFEN);
 
 
 	int running = 1;
@@ -39,9 +115,15 @@ int main(int argc, char* argv[]){
 				running = 0;
 			}
 		}
+
+		DrawBoard(Renderer);
+		DrawPieces(Renderer, &board);
+		SDL_RenderPresent(Renderer);
 	}
 
 
+	// Destroy Textures
+	DestroyTextures();
 
 	// Destroy window and renderer
 	SDL_DestroyWindow(Window);
