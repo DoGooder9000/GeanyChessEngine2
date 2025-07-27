@@ -3,6 +3,49 @@
 static const U64 IsRank1 = 0xFF00000000000000;
 static const U64 IsRank8 = 0x00000000000000FF;
 
+void MakeMove(Board* b, int move){
+	int source_sq = GetSrcSq(move);
+	int target_sq = GetTgtSq(move);
+	int piece = GetPiece(move);
+	int pr_piece = GetPrPiece(move);
+	int capture = GetCapture(move);
+	int isDouble = GetDouble(move);
+	int en_pass = GetEnPass(move);
+	int castle = GetCastle(move);
+
+	// Have to save the current board state before the move
+	if (GetEnPass(move)){
+		;
+	}
+	else{
+		AddHistory(&b->history, MakeHistoryState(capture, (capture ? b->pieces[target_sq] : 0), b->en_sq, b->castle_rights));
+	}
+
+	b->pieces[target_sq] = b->pieces[source_sq];
+	b->pieces[source_sq] = -1;
+
+	// Swap color
+	b->color ^= 1;
+}
+
+void UnMakeMove(Board* b, int move){
+	int source_sq = GetSrcSq(move);
+	int target_sq = GetTgtSq(move);
+	int piece = GetPiece(move);
+	int pr_piece = GetPrPiece(move);
+	int capture = GetCapture(move);
+	int isDouble = GetDouble(move);
+	int en_pass = GetEnPass(move);
+	int castle = GetCastle(move);
+
+	int prev_state = PopHistory(&b->history);
+
+	b->pieces[source_sq] = b->pieces[target_sq];
+	b->pieces[target_sq] = HistoryIsTakenPiece(prev_state) ? HistoryTakenPiece(prev_state) : -1;
+
+	b->color ^= 1;
+}
+
 void AddMove(MoveList* moves, int move){
 	moves->moves[moves->count] = move;
 	moves->count++;

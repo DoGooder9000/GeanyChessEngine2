@@ -6,6 +6,7 @@
 #include "include/board.h"
 #include "include/bitboard.h"
 #include "include/piece.h"
+#include "include/move.h"
 
 #define WIDTH 800
 #define HEIGHT 800
@@ -119,6 +120,10 @@ int main(int argc, char* argv[]){
 	Board board;
 	InitBoard(&board, StartFEN);
 
+	// Make move list
+	MoveList moves;
+	moves.count = 0;
+
 	// Loop Variables
 	int mouse_start_x, mouse_start_y;
 	int mouse_end_x, mouse_end_y;
@@ -133,6 +138,16 @@ int main(int argc, char* argv[]){
 		while (SDL_PollEvent(&e)){
 			if (e.type == SDL_QUIT){
 				running = 0;
+			}
+			else if (e.type == SDL_KEYDOWN){
+				switch (e.key.keysym.sym){
+					case SDLK_LEFT:
+						moves.count--;
+						UnMakeMove(&board, moves.moves[moves.count]);
+						break;
+					case SDLK_RIGHT:
+						break;
+				}
 			}
 		}
 
@@ -154,11 +169,9 @@ int main(int argc, char* argv[]){
 		if (start != -1 && end != -1 && PieceColor(board.pieces[start]) == board.color && start != end){
 			if (board.pieces[end] != -1 && PieceColor(board.pieces[start]) == PieceColor(board.pieces[end])){}
 			else {
-				board.pieces[end] = board.pieces[start];
-				board.pieces[start] = -1;
-	
-				// Swap color
-				board.color ^= 1;
+				int move = EncodeMove(start, end, board.pieces[start], 0, (board.pieces[end] == -1) ? 0 : 1, 0, 0, 0);
+				MakeMove(&board, move);
+				AddMove(&moves, move);
 				
 				start = -1;
 				end = -1;

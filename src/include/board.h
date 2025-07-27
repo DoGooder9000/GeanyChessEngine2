@@ -5,6 +5,11 @@
 
 #define OppColor(color) ((color) ^ 1)
 
+#define HisIsTakenPieceMask		0b1
+#define HisTakenPieceMask		0b11110
+#define HisEnPassSqMask			0b111111000000
+#define HisCastleMask			0b111100000000000
+
 #define MakeHistoryState(taken, piece, en_sq, castle) (	\
 		((taken))		|								\
 		((piece) << 1)	|								\
@@ -12,10 +17,10 @@
 		((castle) << 11)								\
 	)
 
-#define HistoryIsTakenPiece(state) ((state) & 0b1)
-#define HistoryTakenPiece(state) (((state) & 0b1111) >> 1)
-#define HistoryEnPassSq(state) (((state) & 0b1111110000) >> 5)
-#define HistoryCastle(state) (((state) & 0b11110000000000) >> 11)
+#define HistoryIsTakenPiece(state) ((state) & HisIsTakenPieceMask)
+#define HistoryTakenPiece(state) (((state) & HisTakenPieceMask) >> 1)
+#define HistoryEnPassSq(state) (((state) & HisEnPassSqMask) >> 5)
+#define HistoryCastle(state) (((state) & HisCastleMask) >> 11)
 
 extern char* StartFEN;
 
@@ -70,6 +75,8 @@ typedef struct Board{
 } Board;
 
 void AddHistory(MoveList* his, int state);
+
+int PopHistory(MoveList* his);
 
 void InitBoard(Board* b, char* FEN);
 

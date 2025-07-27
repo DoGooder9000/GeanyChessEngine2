@@ -16,11 +16,11 @@
 		((src))				 	|		\
 		((tgt) << 6)			|		\
 		((piece) << 12)			|		\
-		((pro_piece) << 15)		|		\
-		((is_cap) << 19)		|		\
-		((is_double) << 20)		|		\
-		((is_en_pass) << 21)	|		\
-		((is_castle) << 22)
+		((pro_piece) << 16)		|		\
+		((is_cap) << 20)		|		\
+		((is_double) << 21)		|		\
+		((is_en_pass) << 22)	|		\
+		((is_castle) << 23)
 
 #define GetSrcSq(move)		(move & SRC_SQ_MASK)
 #define GetTgtSq(move)		((move & TGT_SQ_MASK) >> 6)
@@ -30,6 +30,9 @@
 #define GetDouble(move)		((move & DOUBLE_MASK) >> 21)
 #define GetEnPass(move)		((move & EN_PAS_MASK) >> 22)
 #define GetCastle(move)		((move & CASTLE_MASK) >> 23)
+
+void MakeMove(Board* b, int move);
+void UnMakeMove(Board* b, int move);
 
 void AddMove(MoveList* moves, int move);
 
