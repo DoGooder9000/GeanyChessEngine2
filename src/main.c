@@ -152,15 +152,18 @@ int main(int argc, char* argv[]){
 		}
 
 
-		if (start != -1 && end != -1 && PieceColor(board.pieces[start]) == board.color){
-			board.pieces[end] = board.pieces[start];
-			board.pieces[start] = -1;
-
-			// Swap color
-			board.color ^= 1;
-			
-			start = -1;
-			end = -1;
+		if (start != -1 && end != -1 && PieceColor(board.pieces[start]) == board.color && start != end){
+			if (board.pieces[end] != -1 && PieceColor(board.pieces[start]) == PieceColor(board.pieces[end])){}
+			else {
+				board.pieces[end] = board.pieces[start];
+				board.pieces[start] = -1;
+	
+				// Swap color
+				board.color ^= 1;
+				
+				start = -1;
+				end = -1;
+			}
 		}
 		DrawBoard(Renderer);
 		DrawPieces(Renderer, &board);

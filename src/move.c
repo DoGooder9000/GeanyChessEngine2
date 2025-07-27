@@ -3,7 +3,7 @@
 static const U64 IsRank1 = 0xFF00000000000000;
 static const U64 IsRank8 = 0x00000000000000FF;
 
-inline void AddMove(MoveList* moves, int move){
+void AddMove(MoveList* moves, int move){
 	moves->moves[moves->count] = move;
 	moves->count++;
 }
@@ -39,13 +39,13 @@ void GeneratePawnMoves(Board* b, MoveList* moves, int quiet){
 				target_sq = GetLSBIndex(attacks);
 
 				if ((1ULL << target_sq) & (color ? IsRank1 : IsRank8)){ // Promotion
-					AddMove(moves, EncodeMove(source_sq, target_sq, pawn, knight, color, 0, 0, 0, 0));
-					AddMove(moves, EncodeMove(source_sq, target_sq, pawn, bishop, color, 0, 0, 0, 0));
-					AddMove(moves, EncodeMove(source_sq, target_sq, pawn, rook, color, 0, 0, 0, 0));
-					AddMove(moves, EncodeMove(source_sq, target_sq, pawn, queen, color, 0, 0, 0, 0));
+					AddMove(moves, EncodeMove(source_sq, target_sq, EncodePiece(color, pawn), EncodePiece(color, knight), 0, 0, 0, 0));
+					AddMove(moves, EncodeMove(source_sq, target_sq, EncodePiece(color, pawn), EncodePiece(color, bishop), 0, 0, 0, 0));
+					AddMove(moves, EncodeMove(source_sq, target_sq, EncodePiece(color, pawn), EncodePiece(color, rook), 0, 0, 0, 0));
+					AddMove(moves, EncodeMove(source_sq, target_sq, EncodePiece(color, pawn), EncodePiece(color, queen), 0, 0, 0, 0));
 				}
 				else {
-					AddMove(moves, EncodeMove(source_sq, target_sq, pawn, 0, color, 0, 0, 0, 0));
+					AddMove(moves, EncodeMove(source_sq, target_sq, EncodePiece(color, pawn), 0, 0, 0, 0, 0));
 				}
 			}
 			else if (bits == 2) { // Double pawn push available, but also add single pawn push
@@ -53,13 +53,13 @@ void GeneratePawnMoves(Board* b, MoveList* moves, int quiet){
 				if (!(all_blockers & (1ULL << (color ? (source_sq+8) : (source_sq-8))))){ // Single Pawn Push
 					// Single Pawn Push
 					target_sq = source_sq + (color ? 8 : -8);
-					AddMove(moves, EncodeMove(source_sq, target_sq, pawn, 0, color, 0, 0, 0, 0));
+					AddMove(moves, EncodeMove(source_sq, target_sq, EncodePiece(color, pawn), 0, 0, 0, 0, 0));
 				}
 				
 				// If there are no blockers at all, then you can double pawn push
 				if (!(attacks & all_blockers)){
 					target_sq = source_sq + (color ? 16 : -16);
-					AddMove(moves, EncodeMove(source_sq, target_sq, pawn, 0, color, 0, 1, 0, 0));
+					AddMove(moves, EncodeMove(source_sq, target_sq, EncodePiece(color, pawn), 0, 0, 1, 0, 0));
 				}
 			}
 		}
@@ -75,13 +75,13 @@ void GeneratePawnMoves(Board* b, MoveList* moves, int quiet){
 			PopBit(attacks, target_sq);
 
 			if ((1ULL << target_sq) & (color ? IsRank1 : IsRank8)){ // Promotion
-				AddMove(moves, EncodeMove(source_sq, target_sq, pawn, knight, color, 1, 0, 0, 0));
-				AddMove(moves, EncodeMove(source_sq, target_sq, pawn, bishop, color, 1, 0, 0, 0));
-				AddMove(moves, EncodeMove(source_sq, target_sq, pawn, rook, color, 1, 0, 0, 0));
-				AddMove(moves, EncodeMove(source_sq, target_sq, pawn, queen, color, 1, 0, 0, 0));
+				AddMove(moves, EncodeMove(source_sq, target_sq, EncodePiece(color, pawn), EncodePiece(color, knight), 1, 0, 0, 0));
+				AddMove(moves, EncodeMove(source_sq, target_sq, EncodePiece(color, pawn), EncodePiece(color, bishop), 1, 0, 0, 0));
+				AddMove(moves, EncodeMove(source_sq, target_sq, EncodePiece(color, pawn), EncodePiece(color, rook), 1, 0, 0, 0));
+				AddMove(moves, EncodeMove(source_sq, target_sq, EncodePiece(color, pawn), EncodePiece(color, queen), 1, 0, 0, 0));
 			}
 			else {
-				AddMove(moves, EncodeMove(source_sq, target_sq, pawn, 0, color, 1, 0, 0, 0));
+				AddMove(moves, EncodeMove(source_sq, target_sq, EncodePiece(color, pawn), 0, 1, 0, 0, 0));
 			}
 		}
 
@@ -98,7 +98,7 @@ void GeneratePawnMoves(Board* b, MoveList* moves, int quiet){
 					target_sq = GetLSBIndex(attacks);
 					PopBit(attacks, target_sq);
 					if ((target_sq+offset) == b->en_sq)
-					AddMove(moves, EncodeMove(source_sq, target_sq, pawn, 0, color, 1, 0, 1, 0));
+					AddMove(moves, EncodeMove(source_sq, target_sq, EncodePiece(color, pawn), 0, 1, 0, 1, 0));
 				}
 			}
 		}

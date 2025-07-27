@@ -29,51 +29,51 @@ void ParseFEN(Board* b, char* FEN){
 		else{
 			switch (c){
 				case 'P':
-					b->pieces[b_pos] = MakePiece(white, pawn);
+					b->pieces[b_pos] = EncodePiece(white, pawn);
 					break;
 
 				case 'N':
-					b->pieces[b_pos] = MakePiece(white, knight);
+					b->pieces[b_pos] = EncodePiece(white, knight);
 					break;
 				
 				case 'B':
-					b->pieces[b_pos] = MakePiece(white, bishop);
+					b->pieces[b_pos] = EncodePiece(white, bishop);
 					break;
 				
 				case 'R':
-					b->pieces[b_pos] = MakePiece(white, rook);
+					b->pieces[b_pos] = EncodePiece(white, rook);
 					break;
 
 				case 'Q':
-					b->pieces[b_pos] = MakePiece(white, queen);
+					b->pieces[b_pos] = EncodePiece(white, queen);
 					break;
 				
 				case 'K':
-					b->pieces[b_pos] = MakePiece(white, king);
+					b->pieces[b_pos] = EncodePiece(white, king);
 					break;
 				
 				case 'p':
-					b->pieces[b_pos] = MakePiece(black, pawn);
+					b->pieces[b_pos] = EncodePiece(black, pawn);
 					break;
 
 				case 'n':
-					b->pieces[b_pos] = MakePiece(black, knight);
+					b->pieces[b_pos] = EncodePiece(black, knight);
 					break;
 				
 				case 'b':
-					b->pieces[b_pos] = MakePiece(black, bishop);
+					b->pieces[b_pos] = EncodePiece(black, bishop);
 					break;
 				
 				case 'r':
-					b->pieces[b_pos] = MakePiece(black, rook);
+					b->pieces[b_pos] = EncodePiece(black, rook);
 					break;
 
 				case 'q':
-					b->pieces[b_pos] = MakePiece(black, queen);
+					b->pieces[b_pos] = EncodePiece(black, queen);
 					break;
 				
 				case 'k':
-					b->pieces[b_pos] = MakePiece(black, king);
+					b->pieces[b_pos] = EncodePiece(black, king);
 					break;
 			}
 			b_pos++;

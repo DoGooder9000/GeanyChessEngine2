@@ -10,6 +10,6 @@
 #define TypeMask 0b0111
 
 // Color 0-1, Type 0-5
-#define MakePiece(color, type) ((color)<<3 | type)
+#define EncodePiece(color, type) ((color)<<3 | type)
 #define PieceColor(piece) (((piece) & ColorMask) >> 3)
 #define PieceType(piece) ((piece) & TypeMask)
