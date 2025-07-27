@@ -117,8 +117,7 @@ int main(int argc, char* argv[]){
 	
 	// Init board
 	Board board;
-	ParseFEN(&board, StartFEN);
-	GenerateBitboards(&board);
+	InitBoard(&board, StartFEN);
 
 	// Loop Variables
 	int mouse_start_x, mouse_start_y;

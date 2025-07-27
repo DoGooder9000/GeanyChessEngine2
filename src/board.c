@@ -7,6 +7,18 @@
 
 char* StartFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
+void AddHistory(MoveList* his, int state){
+	his->moves[his->count] = state;
+}
+
+void InitBoard(Board* b, char* FEN){
+	ParseFEN(b, FEN);
+	GenerateBitboards(b);
+
+	b->history.count = 0;
+	AddHistory(&b->history, MakeHistoryState(0, 0, b->en_sq, b->castle_rights));
+}
+
 void ParseFEN(Board* b, char* FEN){
 	int len = strlen(FEN);
 

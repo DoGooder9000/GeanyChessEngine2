@@ -5,6 +5,18 @@
 
 #define OppColor(color) ((color) ^ 1)
 
+#define MakeHistoryState(taken, piece, en_sq, castle) (	\
+		((taken))		|								\
+		((piece) << 1)	|								\
+		((en_sq) << 5)	|								\
+		((castle) << 11)								\
+	)
+
+#define HistoryIsTakenPiece(state) ((state) & 0b1)
+#define HistoryTakenPiece(state) (((state) & 0b1111) >> 1)
+#define HistoryEnPassSq(state) (((state) & 0b1111110000) >> 5)
+#define HistoryCastle(state) (((state) & 0b11110000000000) >> 11)
+
 extern char* StartFEN;
 
 enum{
@@ -34,6 +46,17 @@ enum{
 	pawn, knight, bishop, rook, queen, king
 };
 
+typedef struct MoveList{
+	int moves[250];
+	int count;
+} MoveList;
+
+// History format will be
+// 0000 0000 0000 0001 Is Taken Piece
+// 0000 0000 0001 1110 Taken Piece
+// 0000 0111 1110 0000 En sq
+// 0111 1000 0000 0000 Castle Rights
+
 typedef struct Board{
 	int pieces[64];
 	U64 bitboards[2][7];
@@ -42,12 +65,13 @@ typedef struct Board{
 	int en_sq;
 	int half_moves;
 	int full_moves;
+
+	MoveList history;
 } Board;
 
-typedef struct MoveList{
-	int moves[250];
-	int count;
-} MoveList;
+void AddHistory(MoveList* his, int state);
+
+void InitBoard(Board* b, char* FEN);
 
 void ParseFEN(Board* b, char* FEN);
 
