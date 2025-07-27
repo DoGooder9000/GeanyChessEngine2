@@ -1,4 +1,5 @@
 #include "include/bitboard.h"
+#include "include/board.h"
 
 static const U64 IsAFile = 0x0101010101010101;
 static const U64 IsHFile = 0x1010101010101010;
