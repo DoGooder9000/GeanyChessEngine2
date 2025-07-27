@@ -142,8 +142,10 @@ int main(int argc, char* argv[]){
 			else if (e.type == SDL_KEYDOWN){
 				switch (e.key.keysym.sym){
 					case SDLK_LEFT:
-						moves.count--;
-						UnMakeMove(&board, moves.moves[moves.count]);
+						if (moves.count != 0){
+							moves.count--;
+							UnMakeMove(&board, moves.moves[moves.count]);
+						}
 						break;
 					case SDLK_RIGHT:
 						break;
