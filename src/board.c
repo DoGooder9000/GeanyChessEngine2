@@ -84,7 +84,7 @@ void ParseFEN(Board* b, char* FEN){
 	if (FEN[i] == 'w') b->color = white;
 	else b->color = black;
 	i += 2; // skip the w or b and skip the ' '
-
+	
 	// Now castling
 	c = FEN[i];
 	b->castle_rights = 0;
@@ -105,13 +105,13 @@ void ParseFEN(Board* b, char* FEN){
 		else if (c == 'q'){
 			b->castle_rights |= BQ;
 		}
-
+		
 		i++;
 		c = FEN[i];
 	}
-
+	
 	i++; // Get the next thing after the space
-
+	
 	// En passant
 	if (FEN[i] == '-'){
 		b->en_sq = -1;
@@ -121,7 +121,7 @@ void ParseFEN(Board* b, char* FEN){
 		b->en_sq = GetIntPos(FEN+i); // Should return square number based on readable coordinate
 		i += 3; // Because the square name will be 2 characters long + the space
 	}
-
+	
 	// Half moves
 	if (isdigit(FEN[i])){
 		// Check if it is single or double digit
@@ -129,10 +129,10 @@ void ParseFEN(Board* b, char* FEN){
 			// It is a double digit
 			int num1 = FEN[i] - '0';
 			int num2 = FEN[i+1] - '0';
-
+			
 			num1 *= 10;
 			b->half_moves = num1+num2;
-
+			
 			i++;
 		}
 		else {
@@ -142,14 +142,14 @@ void ParseFEN(Board* b, char* FEN){
 	}
 	
 	i += 2; // Go past the number and the space
-
+	
 	// Full Moves, Handles up to 3 digits
 	if (isdigit(FEN[i])){
 		int num1 = FEN[i] - '0';
-
+		
 		if (isdigit(FEN[i+1])){
 			int num2 = FEN[i+1] - '0';
-
+			
 			if (isdigit(FEN[i+2])){
 				int num3 = FEN[i+2] - '0';
 				
@@ -163,10 +163,10 @@ void ParseFEN(Board* b, char* FEN){
 
 void GenerateBitboards(Board* b){
 	for (int i=0; i<14; i++) b->bitboards[i/7][i%7] = 0ULL;
-
+	
 	for (int i=0; i<64; i++){
 		// Also need to update the same color bitboard [6]
-		if (b->pieces[i] != '_'){
+		if (b->pieces[i] != -1){
 			b->bitboards[PieceColor(b->pieces[i])][PieceType(b->pieces[i])] |= (1ULL << i);
 			b->bitboards[PieceColor(b->pieces[i])][6] |= (1ULL << i);
 		}
@@ -205,7 +205,7 @@ int GetIntPos(char* s){
 					return -1;
 		}
 		
-		if ((int)s[1]<'0' || (int)s[1]>'9'){ return -1; }
+		if (!isdigit(s[1])){ return -1; }
 		
 		pos += (8-(s[1]-'0'))*8;
 		

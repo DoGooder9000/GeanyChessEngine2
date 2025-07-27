@@ -114,7 +114,6 @@ int main(int argc, char* argv[]){
 	ParseFEN(&board, StartFEN);
 	GenerateBitboards(&board);
 
-	
 	// Loop Variables
 	int mouse_start_x, mouse_start_y;
 	int mouse_end_x, mouse_end_y;
@@ -143,14 +142,16 @@ int main(int argc, char* argv[]){
 				SDL_GetMouseState(&mouse_end_x, &mouse_end_y);
 				start = ScreenPosToSquare(mouse_start_x, mouse_start_y);
 				end = ScreenPosToSquare(mouse_end_x, mouse_end_y);
-
-				printf("%d %d\n", start, end);
 			}
 		}
 
-		if (start != -1 && end != -1){
+
+		if (start != -1 && end != -1 && PieceColor(board.pieces[start]) == board.color){
 			board.pieces[end] = board.pieces[start];
 			board.pieces[start] = -1;
+
+			// Swap color
+			board.color ^= 1;
 			
 			start = -1;
 			end = -1;

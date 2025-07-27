@@ -34,7 +34,7 @@ enum{
 
 typedef struct Board{
 	int pieces[64];
-	U64 bitboards[2][6];
+	U64 bitboards[2][7];
 	int color;
 	int castle_rights;
 	int en_sq;
