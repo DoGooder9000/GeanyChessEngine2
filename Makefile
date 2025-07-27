@@ -10,7 +10,7 @@ END_FILE = $(BUILD_DIR)/$(END_FILE_NAME)
 
 COMPILER = gcc
 
-SDL_FLAGS = -lmingw -lSDL2main -lSDL2 -lSDL2_image
+SDL_FLAGS = -lmingw32 -lSDL2main -lSDL2 -lSDL2_image
 
 all:
 	mkdir -p $(BUILD_DIR)
