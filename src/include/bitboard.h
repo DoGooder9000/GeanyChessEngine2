@@ -12,6 +12,9 @@ extern U64 PrecomputedPawnMoves[2][64];
 extern U64 PrecomputedKnightMoves[64];
 extern U64 PrecomputedKingMoves[64];
 
+int CountBits(U64 b);
+int GetLSBIndex(U64 b);
+
 U64 PawnAttackBitboard(int sq, int color);
 U64 PawnMoveBitboard(int sq, int color);
 U64 KnightMoveBitboard(int sq);

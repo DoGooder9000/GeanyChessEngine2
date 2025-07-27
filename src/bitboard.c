@@ -22,6 +22,27 @@ U64 PrecomputedPawnMoves[2][64];
 U64 PrecomputedKnightMoves[64];
 U64 PrecomputedKingMoves[64];
 
+
+int CountBits(U64 b){
+	int num = 0;
+
+	while (b){
+		num++;
+		b &= b-1;
+	}
+	
+	return num;
+}
+
+int GetLSBIndex(U64 b){
+	if (b){
+		return CountBits((b & -b) - 1);
+	}
+
+	// If it is all 0's
+	return -1;
+}
+
 U64 PawnAttackBitboard(int sq, int color){
 	U64 PawnPos = 1ULL << sq;
 	U64 b = 0ULL;

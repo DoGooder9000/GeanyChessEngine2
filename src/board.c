@@ -211,3 +211,18 @@ int GetIntPos(char* s){
 		
 		return pos;
 }
+
+int isSquareAttacked(Board* b, int sq, int color){
+	U64 all_blockers = b->bitboards[0][6] | b->bitboards[1][6];
+	
+	// If it is attacked by pawns
+	// We get the opposite color
+	if (PrecomputedPawnAttacks[OppColor(color)][sq] & b->bitboards[color][pawn]) return 1;
+	if (PrecomputedKnightMoves[sq] & b->bitboards[color][knight]) return 1;
+	if (PrecomputedKingMoves[sq] & b->bitboards[color][king]) return 1;
+	/* if (GetBishopAttacks(sq, all_blockers) & b->bitboards[color][bishop]) return 1;
+	if (GetRookAttacks(sq, all_blockers) & b->bitboards[color][rook]) return 1;
+	if (GetQueenAttacks(sq, all_blockers) & b->bitboards[color][queen]) return 1; */
+
+	return 0;
+}

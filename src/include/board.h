@@ -3,6 +3,8 @@
 #include "bitboard.h"
 #include "piece.h"
 
+#define OppColor(color) ((color) ^ 1)
+
 extern char* StartFEN;
 
 enum{
@@ -42,8 +44,15 @@ typedef struct Board{
 	int full_moves;
 } Board;
 
+typedef struct MoveList{
+	int moves[250];
+	int count;
+} MoveList;
+
 void ParseFEN(Board* b, char* FEN);
 
 void GenerateBitboards(Board* b);
 
 int GetIntPos(char* s);
+
+int isSquareAttacked(Board* b, int sq, int color);
